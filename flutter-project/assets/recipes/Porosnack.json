@@ -1,0 +1,41 @@
+{
+  "name": "Porosnack",
+  "difficulty": 3,
+  "time": 25,
+  "picture": "Porosnack.jpg",
+
+  "language": "en",
+
+  "tags":[
+    "sweet",
+    "spicy"
+  ],
+  "types":[
+    "pastry",
+    "cookie"
+  ],
+
+  "ingredients": [
+    {
+      "name": "true ice (crushed)",
+      "amount": "5"
+    },
+    {
+      "name": "flour",
+      "amount": "100"
+    },
+    {
+      "name": "sugar",
+      "amount": "200"
+    }
+  ],
+  "instructions": [
+    "crush the true ice shard if you not already bought it crushed",
+    "combine flour and sugar and heat it until the sugar melts",
+    "add true ice shards and mix",
+    "quickly pour into cookie mold",
+    "true ice cools down the batter->remove from mold",
+    "enjoy"
+  ]
+}
+
