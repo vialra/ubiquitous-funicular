@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/services.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -22,7 +26,7 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.indigo,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -31,7 +35,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
-
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
   // how it looks.
@@ -49,6 +52,45 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  List _recipes = [];
+
+  //@override
+  //void initState(){
+  //  super.initState();
+  //
+  //}
+
+
+  Future<List<String>> _loadJsons() async{
+
+
+    // Load as String
+    final manifestContent = await DefaultAssetBundle.of(context).loadString('AssetManifest.json');
+
+    // Decode to Map
+    final Map<String, dynamic> manifestMap = json.decode(manifestContent);
+
+    // Filter by path
+    final filtered = manifestMap.keys
+        .where((path) => path.startsWith('assets/recipes/'))
+        .toList();
+    print(filtered);
+    return filtered;
+  }
+    
+
+
+  // Fetch content from the json file
+  Future<void> _readJson() async {//TODO only add once not every time (init)
+    List<String> allrecipes= await _loadJsons();
+    for (var recipepath in allrecipes) {
+      final String response = await rootBundle.loadString(recipepath);
+      final decodedjson = await json.decode(response);
+      setState(() {
+        _recipes.add(decodedjson);
+      });
+    }
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -102,14 +144,44 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            // Display the data
+            _recipes.isNotEmpty
+                ? Expanded(
+                  child: ListView.builder(
+                    //how many items will be built
+                    itemCount: _recipes.length,
+                    //build function
+                    itemBuilder: (context, index) {
+                      return Card(
+                          margin: const EdgeInsets.all(10),
+                          //wrap anything in GestureDetector to give it clickable properties
+                          child: GestureDetector(
+                            onHorizontalDragEnd: (DragEndDetails details)
+                            {//TODO nav neue seite
+                              print ("blub");
+                              print(details);
+                            },
+                            onTap: _incrementCounter,
+                            child: ListTile(
+                              leading: Image.asset('assets/images/${_recipes[index]["picture"]}',height:100, width:100),
+                              title: Text(_recipes[index]["name"]),
+                              subtitle: Text('difficultly: ${_recipes[index]["difficulty"]} time: ${_recipes[index]["time"]}'),
+                            ),
+                          ),
+                        );
+                    },
+                  ),
+                )
+                : Container(),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: _readJson,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+
     );
   }
 }

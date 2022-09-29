@@ -1,8 +1,8 @@
 {
-  "name": "Porosnack",
-  "difficulty": 3,
-  "time": 25,
-  "picture": "Porosnack.jpg",
+  "name": "quantum Cola",
+  "difficulty": 4,
+  "time": 55,
+  "picture": "quantumcola.jpg",
 
   "language": "en",
 
@@ -38,4 +38,3 @@
     "enjoy"
   ]
 }
-
